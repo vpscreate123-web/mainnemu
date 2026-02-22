@@ -1,0 +1,131 @@
+#!/bin/bash
+
+# ==============================
+#      JISHNU NETWORK CONSOLE
+# ==============================
+
+# COLORS
+R="\e[1;31m"
+G="\e[1;32m"
+Y="\e[1;33m"
+B="\e[1;34m"
+C="\e[1;36m"
+W="\e[1;37m"
+N="\e[0m"
+
+# LOGO
+logo() {
+echo -e "${R}"
+echo "╔════════════════════════════════════════════════════╗"
+echo "║   ██╗██╗███████╗██╗  ██╗███╗   ██╗██╗   ██╗       ║"
+echo "║   ██║██║██╔════╝██║  ██║████╗  ██║██║   ██║       ║"
+echo "║   ██║██║███████╗███████║██╔██╗ ██║██║   ██║       ║"
+echo "║   ██║██║╚════██║██╔══██║██║╚██╗██║██║   ██║       ║"
+echo "║   ██║██║███████║██║  ██║██║ ╚████║╚██████╔╝       ║"
+echo "║   ╚═╝╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝        ║"
+echo "║                   N E T W O R K                    ║"
+echo "╚════════════════════════════════════════════════════╝"
+echo -e "${Y}              Made by TYRKROX${N}\n"
+}
+
+header() {
+clear
+logo
+echo -e "${R}══════════════════════════════════════════════════════${N}"
+echo -e "${W}           DEVELOPMENT MANAGEMENT CONSOLE${N}"
+echo -e "${R}══════════════════════════════════════════════════════${N}\n"
+}
+
+pause(){
+echo ""
+read -p "Press Enter to return to main menu..." dummy
+}
+
+while true; do
+header
+
+echo -e "${R}1)${Y} 🚀 GitHub VPS Maker${N}"
+echo -e "${R}2)${Y} 🔧 IDX Tool Setup${N}"
+echo -e "${R}3)${Y} ⚡ IDX VPS Maker${N}"
+echo -e "${R}4)${Y} 🌐 Real VPS (Any + KVM)${N}"
+echo -e "${R}5)${Y} ❌ Exit${N}"
+echo ""
+read -p "Select option [1-5]: " op
+
+case $op in
+
+1)
+header
+echo -e "${C}Launching GitHub VPS...${N}"
+
+RAM=15000
+CPU=4
+DISK_SIZE=100G
+CONTAINER_NAME=hopingboyz
+IMAGE_NAME=hopingboyz/debain12
+VMDATA_DIR="$PWD/vmdata"
+
+mkdir -p "$VMDATA_DIR"
+
+docker run -it --rm \
+  --name "$CONTAINER_NAME" \
+  --device /dev/kvm \
+  -v "$VMDATA_DIR":/vmdata \
+  -e RAM="$RAM" \
+  -e CPU="$CPU" \
+  -e DISK_SIZE="$DISK_SIZE" \
+  "$IMAGE_NAME"
+
+pause
+;;
+
+2)
+header
+echo -e "${C}Setting up IDX Tool...${N}"
+
+mkdir -p ~/vps123/.idx
+cat <<EOF > ~/vps123/.idx/dev.nix
+{ pkgs, ... }: {
+  channel = "stable-24.05";
+  packages = with pkgs; [
+    unzip git qemu_kvm sudo qemu
+  ];
+}
+EOF
+
+echo -e "${G}IDX Setup Complete!${N}"
+pause
+;;
+
+3)
+header
+echo -e "${C}Running IDX VPS Maker...${N}"
+bash <(curl -s https://raw.githubusercontent.com/jishnu-limited/app-build-journey/refs/heads/main/vpmakerkvmidx)
+pause
+;;
+
+4)
+header
+echo -e "${C}Running Real VPS Installer...${N}"
+
+bash <(curl -s https://raw.githubusercontent.com/nobita329/The-Coding-Hub/refs/heads/main/srv/vm/dd.sh)
+bash <(curl -s https://raw.githubusercontent.com/JishnuTheGamer/Vps/refs/heads/main/n)
+
+pause
+;;
+
+5)
+clear
+logo
+echo -e "${Y}Goodbye! 👋${N}"
+sleep 1
+exit 0
+;;
+
+*)
+echo -e "${R}Invalid Option!${N}"
+sleep 1
+;;
+
+esac
+done
