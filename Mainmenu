@@ -1,123 +1,87 @@
 #!/bin/bash
+export LANG=en_US.UTF-8
 
-# ==============================
-#      JISHNU NETWORK CONSOLE
-# ==============================
-
-# COLORS
+# COLORS - RED THEME
 R="\e[1;31m"
 G="\e[1;32m"
 Y="\e[1;33m"
 B="\e[1;34m"
 C="\e[1;36m"
+M="\e[1;35m"
 W="\e[1;37m"
 N="\e[0m"
 
-# LOGO
-logo() {
-echo -e "${R}"
-echo "╔════════════════════════════════════════════════════╗"
-echo "║  ████████╗██╗   ██╗██████╗ ██╗  ██╗ ██████╗ ██╗  ██╗ ║"
-echo "║  ╚══██╔══╝╚██╗ ██╔╝██╔══██╗██║ ██╔╝██╔═══██╗╚██╗██╔╝ ║"
-echo "║     ██║    ╚████╔╝ ██████╔╝█████╔╝ ██║   ██║ ╚███╔╝  ║"
-echo "║     ██║     ╚██╔╝  ██╔══██╗██╔═██╗ ██║   ██║ ██╔██╗  ║"
-echo "║     ██║      ██║   ██║  ██║██║  ██╗╚██████╔╝██╔╝ ██╗ ║"
-echo "║     ╚═╝      ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝ ║"
-echo "║                     T Y R K O X                       ║"
-echo "╚════════════════════════════════════════════════════╝""
-echo -e "${Y}              Made by TYRKROX${N}\n"
+# TYRKROX ASCII ART
+print_logo() {
+echo -e "\n${R}╔════════════════════════════════════════════════════╗${N}"
+echo -e "${R}║   ████████╗██╗   ██╗██████╗ ██╗  ██╗ ██████╗ ██╗  ██╗ ║${N}"
+echo -e "${R}║   ╚══██╔══╝╚██╗ ██╔╝██╔══██╗██║ ██╔╝██╔═══██╗╚██╗██╔╝ ║${N}"
+echo -e "${R}║      ██║    ╚████╔╝ ██████╔╝█████╔╝ ██║   ██║ ╚███╔╝  ║${N}"
+echo -e "${R}║      ██║     ╚██╔╝  ██╔══██╗██╔═██╗ ██║   ██║ ██╔██╗  ║${N}"
+echo -e "${R}║      ██║      ██║   ██║  ██║██║  ██╗╚██████╔╝██╔╝ ██╗ ║${N}"
+echo -e "${R}║      ╚═╝      ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝ ║${N}"
+echo -e "${R}║                     T Y R K R O X                      ║${N}"
+echo -e "${R}╚════════════════════════════════════════════════════╝${N}\n"
 }
 
-header() {
+print_header() {
 clear
-logo
-echo -e "${R}══════════════════════════════════════════════════════${N}"
-echo -e "${W}           DEVELOPMENT MANAGEMENT CONSOLE${N}"
-echo -e "${R}══════════════════════════════════════════════════════${N}\n"
-}
-
-pause(){
-echo ""
-read -p "Press Enter to return to main menu..." dummy
+print_logo
+echo -e "${W}            DEVELOPMENT MANAGEMENT CONSOLE${N}"
+echo -e "${R}════════════════════════════════════════════════════${N}\n"
 }
 
 while true; do
-header
+print_header
 
-echo -e "${R}1)${Y} 🚀 GitHub VPS Maker${N}"
-echo -e "${R}2)${Y} 🔧 IDX Tool Setup${N}"
-echo -e "${R}3)${Y} ⚡ IDX VPS Maker${N}"
-echo -e "${R}4)${Y} 🌐 Real VPS (Any + KVM)${N}"
-echo -e "${R}5)${Y} ❌ Exit${N}"
+echo -e "${G}1) 🚀 GitHub VPS Maker${N}"
+echo -e "${G}2) 🔧 IDX Tool Setup${N}"
+echo -e "${G}3) ⚡ IDX VPS Maker${N}"
+echo -e "${G}4) 🌐 Real VPS (Any + KVM)${N}"
+echo -e "${G}5) ❌ Exit${N}"
 echo ""
-read -p "Select option [1-5]: " op
+
+read -p "Select Option [1-5]: " op
 
 case $op in
 
 1)
-header
-echo -e "${C}Launching GitHub VPS...${N}"
-
-RAM=15000
-CPU=4
-DISK_SIZE=100G
-CONTAINER_NAME=hopingboyz
-IMAGE_NAME=hopingboyz/debain12
-VMDATA_DIR="$PWD/vmdata"
-
-mkdir -p "$VMDATA_DIR"
-
+echo -e "\n${Y}Launching GitHub VPS...${N}\n"
 docker run -it --rm \
-  --name "$CONTAINER_NAME" \
   --device /dev/kvm \
-  -v "$VMDATA_DIR":/vmdata \
-  -e RAM="$RAM" \
-  -e CPU="$CPU" \
-  -e DISK_SIZE="$DISK_SIZE" \
-  "$IMAGE_NAME"
-
-pause
+  hopingboyz/debain12
+read -p "Press Enter to return..."
 ;;
 
 2)
-header
-echo -e "${C}Setting up IDX Tool...${N}"
-
+echo -e "\n${Y}Setting up IDX Tool...${N}\n"
 mkdir -p ~/vps123/.idx
-cat <<EOF > ~/vps123/.idx/dev.nix
+cd ~/vps123/.idx || exit
+cat <<EOF > dev.nix
 { pkgs, ... }: {
   channel = "stable-24.05";
-  packages = with pkgs; [
-    unzip git qemu_kvm sudo qemu
-  ];
+  packages = with pkgs; [ unzip git qemu_kvm sudo ];
 }
 EOF
-
 echo -e "${G}IDX Setup Complete!${N}"
-pause
+read -p "Press Enter to return..."
 ;;
 
 3)
-header
-echo -e "${C}Running IDX VPS Maker...${N}"
-bash <(curl -s https://raw.githubusercontent.com/jishnu-limited/app-build-journey/refs/heads/main/vpmakerkvmidx)
-pause
+echo -e "\n${Y}Running IDX VPS Maker...${N}\n"
+bash <(curl -s https://raw.githubusercontent.com/jishnu-limited/app-build-journey/main/vpmakerkvmidx)
+read -p "Press Enter to return..."
 ;;
 
 4)
-header
-echo -e "${C}Running Real VPS Installer...${N}"
-
-bash <(curl -s https://raw.githubusercontent.com/nobita329/The-Coding-Hub/refs/heads/main/srv/vm/dd.sh)
-bash <(curl -s https://raw.githubusercontent.com/JishnuTheGamer/Vps/refs/heads/main/n)
-
-pause
+echo -e "\n${Y}Launching Real VPS Installer...${N}\n"
+bash <(curl -s https://raw.githubusercontent.com/nobita329/The-Coding-Hub/main/srv/vm/dd.sh)
+bash <(curl -s https://raw.githubusercontent.com/JishnuTheGamer/Vps/main/n)
+read -p "Press Enter to return..."
 ;;
 
 5)
-clear
-logo
-echo -e "${Y}Goodbye! 👋${N}"
+echo -e "\n${R}Exiting TYRKROX...${N}\n"
 sleep 1
 exit 0
 ;;
